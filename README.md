@@ -1,4 +1,4 @@
-nodelog
+#nodelog
 
 track your website access in realtime
 
