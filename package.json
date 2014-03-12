@@ -1,0 +1,17 @@
+{
+  "name": "nodelog",
+  "version": "0.0.1",
+  "description": "node.js logger app",
+  "main": "server.js",
+  "repository": "",
+  "author": "Alessandro De Marchi <ademarchi74@hotmail.com>",
+  "dependencies": {
+    "express": "~3.2.4",
+    "ejs": "0.8.3",
+    "mongoose": "3.8.8",
+    "mongoose-lifecycle": "1.0.0",
+    "node-uuid": "1.4.1",
+    "moment": "2.5.1",
+    "socket.io": "0.9.16"
+  }
+}
