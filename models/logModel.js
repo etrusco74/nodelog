@@ -16,7 +16,8 @@ var logSchema = mongoose.Schema({
 	
 });
 
-logSchema.plugin(require('mongoose-lifecycle'));
+//logSchema.plugin(require('mongoose-lifecycle'));
+logSchema.plugin(require('mongoose-eventify'));
 
 var LogModel = mongoose.model('Log', logSchema);
 

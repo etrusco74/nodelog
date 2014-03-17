@@ -7,10 +7,16 @@ var LogController = require('../controllers/logController').LogController;
 
 var logController = new LogController();
 
-/** get nodelog **/
-var getNodelog = function(req, res) {
+/** set nodelog **/
+var setNodelog = function(req, res) {
     
+    res.set('Content-Type', 'application/json');
+
     var jsonObj = {};
+
+    console.log('------------------- GET - api setNodelog - public --------------------- ');
+    
+    
     jsonObj.client_id = req.query.u;
     jsonObj.location = req.query.l;
     jsonObj.referrer = req.query.r;
@@ -35,6 +41,37 @@ var getNodelog = function(req, res) {
     res.sendfile(imgPath + '1.gif');
 };
 
+/** get getUniqueIpAddress **/
+var getUniqueIpAddress = function(req, res) {
+   
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    
+    console.log('------------------- GET - api getUniqueIpAddress - public --------------------- ');
+    
+    logController.getUniqueIpAddress(function(err, logs){
+        if (err) {
+            jsonObj.success = false;
+            jsonObj.error = err;
+            res.send(jsonObj);
+            console.log(jsonObj.error);
+        } else {
+            if (logs.length != 0) {
+                res.send(JSON.stringify(logs));
+                console.log('Logs: ' + JSON.stringify(logs));
+            }
+            else {
+                jsonObj.success = false;
+                jsonObj.error = 'No logs found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+        }
+    })    
+};
+
 
 /** exports **/
-exports.getNodelog = getNodelog;
+exports.setNodelog = setNodelog;
+exports.getUniqueIpAddress = getUniqueIpAddress;
