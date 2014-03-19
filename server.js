@@ -63,7 +63,6 @@ server.listen(app.get('port'), function () {
 });
 
 /** socket.io **/
-var messages = [];
 var sockets = [];
 var LogModel = require('./models/logModel');
 
@@ -73,96 +72,43 @@ io.configure(function (){
 });
 
 io.on('connection', function (socket) {
-    
-    /*
-    messages.forEach(function (data) {
-        socket.emit('message', data);
-    });
-    */
-    
-    sockets.push(socket);
 
+    sockets.push(socket);
+    
+    socket.on('identify', function (name) {
+      socket.set('name', name);
+      console.log ('>>> SET SOCKET ID ' + socket.id + ' - NAME ' + name) ;
+    });
+    
     socket.on('disconnect', function () {
       sockets.splice(sockets.indexOf(socket), 1);
-      updateRoster();
+      console.log ('>>> DISCONNECT SOCKET ID ' + socket.id) ;
     });
 
     LogModel.on('add', function(logRes) {
-    
+        
         var text = logRes;
-
-        if (!text)
-        return;
+        console.log ('-------------------------------------------------'); 
+        console.log ('>>> LOGMODEL EVENT FIRED'); 
+        console.log ('>>> NUMSOCKETS ' + sockets.length); 
+        console.log ('>>> client_id ' + text.client_id);
         
         socket.get('name', function (err, name) {
+                
+            console.log ('>>> GET SOCKET ID ' + socket.id + ' - NAME ' + name);
             
             if(name == text.client_id) {
-        
-                var data = {
-                  sid: socket.id,
-                  name: name,
-                  text: text
-                };
                 
-                console.log ('>>> EVENT FIRED ' + _.indexOf(messages, data) + ' - data : ' + JSON.stringify(data) + ' - messages : ' + JSON.stringify(_.object(messages))) ;
-                if(_.indexOf(messages, data) == -1) {
-                    messages.push(data);
-                    broadcast('message', data);
-                }
+                io.sockets.socket(socket.id).emit('message', text);
+                console.log ('>>> SENT MESSAGE TO SOCKET ID ' + socket.id + ' - NAME ' + name + ' - client_id ' + text.client_id + ' - text ' +  JSON.stringify(text)) ;
                 
             }
-            
+            else    {
+                console.log ('>>> MESSAGE NOT SENT');
+            }
+                
         });
-    });
-    
-    socket.on('identify', function (name) {
-      socket.set('name', name, function (err) {
-        updateRoster();
-      });
-    });
-  });
-
-function updateRoster() {
-  async.map(
-    sockets,
-    function (socket, callback) {
-      socket.get('name', callback);
-    },
-    function (err, names) {
-      broadcast('roster', names);
-    }
-  );
-}
-
-function broadcast(event, data) {
-  sockets.forEach(function (socket) {
-    //socket.emit(event, data);
-    io.sockets.socket(data.sid).emit(event, data);
-  });
-}
-
-
-
-/*
-io.configure(function (){
-  io.set('log level', 1);
-  io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'jsonp-polling']);
-});
-
-io.sockets.on('connection', function(socket) {
-    console.log('Started socket connection');
-    socket.on('room', function(room) {
-        socket.join(room);
-        console.log('Joined room: ' + room);
-        socket.emit('message', 'Joined room: ' + room);
+         
     });
     
 });
-
-var LogModel = require('./models/logModel');
-LogModel.on('afterInsert', function(logRes) {
-    console.log('EVENT FIRED - ' + JSON.stringify(logRes));
-    io.sockets.in(logRes.client_id).emit('message', JSON.stringify(logRes));
-    console.log('Send data to room: ' + logRes.client_id);
-});
-*/

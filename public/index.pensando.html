@@ -10,48 +10,36 @@
     <title>nodelog</title>
 
 </head>
+
 <body> 
 
 <div id='log'></div>
 
 <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-<script src="/socket.io/socket.io.js"></script>
+<script src="http://nodelog-c9-etrusco.c9.io/socket.io/socket.io.js"></script>
 <script>
-    $(document).ready(function() { 
-        
-        var socket = io.connect();
 
-        var messages = [];
-        var roster = [];
+    $(document).ready(function() { 
+
         var name = 'pensandoit';
 
+        var socket = io.connect('http://nodelog-c9-etrusco.c9.io:80');
+
         socket.on('connect', function () {
+
             socket.emit('identify', name);
+
+            $("#log").prepend('<p>CONNECTED ' + name + '</p>');
+
         });
 
         socket.on('message', function (msg) {
-            messages.push(msg);
-            $("#log").prepend('<p> MSG : ' + JSON.stringify(msg) + '</p>');
+
+            $("#log").prepend('<p>MSG : ' + JSON.stringify(msg) + '</p>');
+
         });
 
-        socket.on('roster', function (names) {
-            roster = names;
-            $("#log").prepend('<p> ROSTER : ' + JSON.stringify(roster) + '</p>');
-        });
-
-        /*
-        var socket = io.connect();
-        var room = "pensandoit";
-        socket.on('connect', function () {
-            socket.emit('room', room);
-            $("#log").prepend( '<p>waiting for connection to room ' + room + '</p>');
-        });
-        socket.on('message', function(data) {
-            $("#log").prepend('<p>' + data + '</p>');
-        });
-        */
     });
 </script>
-
 </body>
 </html>
