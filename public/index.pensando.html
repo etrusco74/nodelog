@@ -13,6 +13,8 @@
 
 <body> 
 
+Accessi Univoci <div id='num'>0</div>
+<hr>
 <div id='log'></div>
 
 <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
@@ -26,17 +28,16 @@
         var socket = io.connect('http://nodelog-c9-etrusco.c9.io:80');
 
         socket.on('connect', function () {
-
             socket.emit('identify', name);
-
             $("#log").prepend('<p>CONNECTED ' + name + '</p>');
-
         });
 
         socket.on('message', function (msg) {
-
             $("#log").prepend('<p>MSG : ' + JSON.stringify(msg) + '</p>');
-
+        });
+        
+        socket.on('num', function (msg) {
+            $("#num").text(msg.num);
         });
 
     });

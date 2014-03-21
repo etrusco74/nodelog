@@ -4,8 +4,9 @@ var moment = require('moment');
 /** Log Model **/
 var logSchema = mongoose.Schema({
     
+    client_id 			:  	{ type: String, required: true},
     log_date            :  	{ type: Date, required: true, default: moment()},
-	client_id 			:  	{ type: String, required: true},
+    day                 :  	{ type: String, required: true},
 	location 			:   String,
 	referrer 			:   String,
 	width 				:   Number,
@@ -16,7 +17,6 @@ var logSchema = mongoose.Schema({
 	
 });
 
-//logSchema.plugin(require('mongoose-lifecycle'));
 logSchema.plugin(require('mongoose-eventify'));
 
 var LogModel = mongoose.model('Log', logSchema);

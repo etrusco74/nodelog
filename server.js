@@ -1,5 +1,6 @@
 var http = require('http');
 var path = require('path');
+var moment = require('moment'); 
 
 var async = require('async');
 var socketio = require('socket.io');
@@ -13,6 +14,8 @@ var _ = require('underscore');
 var mongoose = require('mongoose');
 var config = require('./config/config');
 mongoose.connect('mongodb://' + config.mongo.user + ':' + config.mongo.password + '@' + config.mongo.host + ':' + config.mongo.port + '/' + config.mongo.db);
+
+var appRoute = require('./routes/app');
 var api = require('./api/api');
 
 /** app config **/
@@ -49,6 +52,9 @@ app.all('*', function(req, res, next){
 });
 
 /** app route view **/ 
+app.get('/clientid/:client_id', appRoute.root);
+
+/** api route view **/ 
 app.get('/nodelog', api.setNodelog);
 app.get('/ip', api.getUniqueIpAddress);
 
@@ -65,6 +71,9 @@ server.listen(app.get('port'), function () {
 /** socket.io **/
 var sockets = [];
 var LogModel = require('./models/logModel');
+var IpModel = require('./models/ipModel');
+var IpController = require('./controllers/ipController').IpController;
+var ipController = new IpController();
 
 io.configure(function (){
   io.set('log level', 1);
@@ -76,8 +85,21 @@ io.on('connection', function (socket) {
     sockets.push(socket);
     
     socket.on('identify', function (name) {
-      socket.set('name', name);
-      console.log ('>>> SET SOCKET ID ' + socket.id + ' - NAME ' + name) ;
+        
+        socket.set('name', name);
+        console.log ('>>> SET SOCKET ID ' + socket.id + ' - NAME ' + name) ;
+      
+        var jsonObjIp = {};
+        jsonObjIp.day = moment().format("YYYYMMDD");
+        jsonObjIp.client_id = name;
+        
+        ipController.get(jsonObjIp, function(err, ipRes){
+            if(ipRes!=null) {
+                var text = ipRes;
+                io.sockets.socket(socket.id).emit('num', text);
+                console.log ('>>> SENT MESSAGE TO SOCKET ID ' + socket.id + ' - NAME ' + name + ' - client_id ' + ipRes.client_id + ' - text ' +  JSON.stringify(text)) ;
+            }
+        });  
     });
     
     socket.on('disconnect', function () {
@@ -110,5 +132,58 @@ io.on('connection', function (socket) {
         });
          
     });
+    
+    IpModel.on('add', function(ipRes) {
+        
+        var text = ipRes;
+        console.log ('-------------------------------------------------'); 
+        console.log ('>>> IPMODEL ADD EVENT FIRED'); 
+        console.log ('>>> NUMSOCKETS ' + sockets.length); 
+        console.log ('>>> client_id ' + text.client_id);
+        
+        socket.get('name', function (err, name) {
+                
+            console.log ('>>> GET SOCKET ID ' + socket.id + ' - NAME ' + name);
+            
+            if(name == text.client_id) {
+                
+                io.sockets.socket(socket.id).emit('num', text);
+                console.log ('>>> SENT MESSAGE TO SOCKET ID ' + socket.id + ' - NAME ' + name + ' - client_id ' + text.client_id + ' - text ' +  JSON.stringify(text)) ;
+                
+            }
+            else    {
+                console.log ('>>> MESSAGE NOT SENT');
+            }
+                
+        });
+         
+    });
+    
+    IpModel.on('change', function(ipRes) {
+        
+        var text = ipRes;
+        console.log ('-------------------------------------------------'); 
+        console.log ('>>> IPMODEL CHANGE EVENT FIRED'); 
+        console.log ('>>> NUMSOCKETS ' + sockets.length); 
+        console.log ('>>> client_id ' + text.client_id);
+        
+        socket.get('name', function (err, name) {
+                
+            console.log ('>>> GET SOCKET ID ' + socket.id + ' - NAME ' + name);
+            
+            if(name == text.client_id) {
+                
+                io.sockets.socket(socket.id).emit('num', text);
+                console.log ('>>> SENT MESSAGE TO SOCKET ID ' + socket.id + ' - NAME ' + name + ' - client_id ' + text.client_id + ' - text ' +  JSON.stringify(text)) ;
+                
+            }
+            else    {
+                console.log ('>>> MESSAGE NOT SENT');
+            }
+                
+        });
+         
+    });
+    
     
 });

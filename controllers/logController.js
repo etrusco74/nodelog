@@ -17,32 +17,14 @@ LogController.prototype.save = function(json, callback) {
     
 };
 
-/** get unique ip address **/
-LogController.prototype.getUniqueIpAddress = function(callback) {
+/** exist ip address in day **/
+LogController.prototype.existIpAddressInDay = function(json, callback) {
     
-    LogModel.aggregate({
-    	    $group : { _id : "$client_ip", count : { $sum : 1 }}
-    	}, 
-    	function (err, logs)	{ 
-    		if (err)  callback(err.message, null)
-            else {
-                if (logs != null)   callback(null, logs);
-                else                callback('Logs not found', null);
-            }
-        }
-    );
-    /*
-    LogModel.aggregate()
-        .group({ _id: '$client_ip', count: { $sum : 1 } })
-        .select('_id count')
-        .exec(function (err, logs) {
-            if (err)    callback(err.message, null)
-            else {
-                if (logs != null)   callback(null, logs);
-                else                callback('Logs not found', null);
-            }
-        });
-    */
+    LogModel.find({ $and: [{client_id:json.client_id}, {client_ip:json.client_ip} , {day:json.day}] }, function (err, log) {
+      if (err)      callback(err.message, null)
+      else          callback(null, log)
+    });
+    
 };
 
 /** exports **/

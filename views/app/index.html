@@ -13,9 +13,9 @@
 
 <body> 
 
-Accessi Univoci <div id='num'>0</div>
+<p>Accessi Univoci <span id='num'>0</span></p>
 <hr>
-<div id='log'></div>
+<p id='log'></p>
 
 <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 <script src="http://nodelog-c9-etrusco.c9.io/socket.io/socket.io.js"></script>
@@ -23,7 +23,7 @@ Accessi Univoci <div id='num'>0</div>
 
     $(document).ready(function() { 
 
-        var name = 'analogicait';
+        var name = '<%= client_id%>';
 
         var socket = io.connect('http://nodelog-c9-etrusco.c9.io:80');
 
