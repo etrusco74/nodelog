@@ -77,7 +77,9 @@ var ipController = new IpController();
 
 io.configure(function (){
   io.set('log level', 1);
-  io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'jsonp-polling']);
+  //io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'jsonp-polling']);
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
 });
 
 io.on('connection', function (socket) {
