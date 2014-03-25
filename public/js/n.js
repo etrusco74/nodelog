@@ -27,7 +27,8 @@ function __nodelog__() {
     args += '&w='+e(w); args += '&h='+e(h); args += '&a='+e(a);
     args += '&hl='+e(hl); 
     //img.src='http://nodelog-c9-etrusco.c9.io/nodelog'+args;
-    img.src='http://nodelogapp.herokuapp.com/nodelog'+args;
+    //img.src='http://nodelogapp.herokuapp.com/nodelog'+args;
+    img.src=window.location.hostname+'/nodelog'+args;
     img.onload = function() { return; };
     
 }
