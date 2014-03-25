@@ -85,8 +85,9 @@
             var server = 'http://nodelogapp.herokuapp.com';
     
             var name = '<%= client_id%>';
-    
-            var socket = io.connect(server+':80');
+            
+            var socket = io.connect(window.location.hostname);
+            //var socket = io.connect(server+':80');
     
             socket.on('connect', function () {
                 socket.emit('identify', name);
