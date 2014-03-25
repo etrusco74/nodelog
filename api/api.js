@@ -1,7 +1,7 @@
 var fs      = require('fs');
 var path    = require('path');
 var moment = require('moment'); 
-var imgPath = path.join(__dirname, '../public/img/');
+var imgPath = path.join(__dirname, '../public/css/img/');
 var logPath = path.join(__dirname, '../log/');
 var utils = require('../config/utils');
 var LogController = require('../controllers/logController').LogController;

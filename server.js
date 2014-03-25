@@ -52,7 +52,7 @@ app.all('*', function(req, res, next){
 });
 
 /** app route view **/ 
-app.get('/clientid/:client_id', appRoute.root);
+app.get('/clientid/:client_id', appRoute.dashboard);
 
 /** api route view **/ 
 app.get('/nodelog', api.setNodelog);
