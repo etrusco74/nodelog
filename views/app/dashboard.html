@@ -38,8 +38,10 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-header">Your Website</li>
-                                <li><a href="http://nodelog-c9-etrusco.c9.io/clientid/pensandoit">pensando.it</a></li>
-                                <li><a href="http://nodelog-c9-etrusco.c9.io/clientid/analogicait">analogica.it</a></li>
+                                <li><a href="http://nodelog-c9-etrusco.c9.io/clientid/pensandoit">pensando.it - c9</a></li>
+                                <li><a href="http://nodelog-c9-etrusco.c9.io/clientid/analogicait">analogica.it - c9</a></li>
+                                <li><a href="http://nodelogapp.herokuapp.com/clientid/pensandoit">pensando.it - heroku</a></li>
+                                <li><a href="http://nodelogapp.herokuapp.com/clientid/analogicait">analogica.it - heroku</a></li>
                                 <li class="divider"></li>
                                 <li class="dropdown-header">View History</li>
                                 <li><a href="#">history data</a></li>
@@ -81,13 +83,9 @@
     <script>
         $(document).ready(function() { 
             
-            /*var server = 'http://nodelog-c9-etrusco.c9.io';*/
-            var server = 'http://nodelogapp.herokuapp.com';
-    
             var name = '<%= client_id%>';
             
             var socket = io.connect(window.location.hostname);
-            //var socket = io.connect(server+':80');
     
             socket.on('connect', function () {
                 socket.emit('identify', name);
