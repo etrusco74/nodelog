@@ -55,10 +55,10 @@
         
         <!-- content -->
         <div class="container">
-            <h3>connected to <span id='con'></span> - <span id='num'>0</span> unique access</h3>
-            <br>
+            <h3>connection</h3>
+            <p>connected to <span id='con' class="text-danger"></span> - unique access : <span id='num' class="text-danger">0</span></p>
             <h3>realtime log</h3>
-            <p id='log'></p>  
+            <ul id='log' class="list-unstyled"></ul>  
         </div>
         
         <div id="push"></div>
@@ -89,16 +89,17 @@
     
             socket.on('connect', function () {
                 socket.emit('identify', name);
-                $("#log").prepend('<p>Connected to <b>' + name + '</b></p>');
+                $("#log").prepend('<li><br>Connected to <b>' + name + '</b></li>');
                 $("#con").text(name);
             });
     
             socket.on('message', function (msg) {
-                $("#log").prepend('<p>' + JSON.stringify(msg) + '</p>');
+                $("#log").prepend('<li><small><span class="glyphicon glyphicon-hand-right"></span> ' + JSON.stringify(msg) + '</small></li>');
+                $('#log li:first').hide().fadeIn(2000);
             });
             
             socket.on('num', function (msg) {
-                $("#num").text(msg.num);
+                $("#num").hide().text(msg.num).fadeIn(1000);
             });
     
         });
