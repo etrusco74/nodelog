@@ -18,9 +18,7 @@ var getClientIp = function (req) {
 };
 
 var getPageUrl = function (url) {
-    return {
-        file: (url.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1]
-    };
+    return (url.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1];
 };
 
 exports.getClientIp = getClientIp;
