@@ -61,8 +61,6 @@ var setNodelog = function(req, res) {
 	
     jsonObjLog.history_length = req.query.hl;
     jsonObjLog.client_ip = utils.getClientIp(req);
-    var geo = geoip.lookup(jsonObjLog.client_ip);
-    jsonObjLog.geo_ip = geo;
     
     //console.log(jsonObjLog);
     

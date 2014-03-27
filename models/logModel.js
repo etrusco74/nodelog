@@ -32,8 +32,7 @@ var logSchema = mongoose.Schema({
 	operating_system    :   String,
 	device              :   String,
 	history_length 		:   Number,
-	client_ip			:   String,
-	geo_ip              :   mongoose.Schema.Types.Mixed
+	client_ip			:   String
 	
 });
 
