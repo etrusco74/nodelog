@@ -8,22 +8,22 @@ var logSchema = mongoose.Schema({
     log_date            :  	{ type: Date, required: true, default: moment()},
     day                 :  	{ type: String, required: true},
 	location: {
-	    href            : { type: String},
-        protocol        : { type: String},
-        host            : { type: String},
-        search          : { type: String},
-        queryParams     : { type: String},
-        pathname        : { type: String},
-        page            : { type: String}
+	    href            : String,
+        protocol        : String,
+        host            : String,
+        search          : String,
+        queryParams     : mongoose.Schema.Types.Mixed,
+        pathname        : String,
+        page            : String
     },
 	referrer: {
-	    href            : { type: String},
-        protocol        : { type: String},
-        host            : { type: String},
-        search          : { type: String},
-        queryParams     : { type: String},
-        pathname        : { type: String},
-        page            : { type: String}
+	    href            : String,
+        protocol        : String,
+        host            : String,
+        search          : String,
+        queryParams     : mongoose.Schema.Types.Mixed,
+        pathname        : String,
+        page            : String
     },
 	width 				:   Number,
 	height 			    :   Number,
