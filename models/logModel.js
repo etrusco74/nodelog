@@ -7,8 +7,22 @@ var logSchema = mongoose.Schema({
     client_id 			:  	{ type: String, required: true},
     log_date            :  	{ type: Date, required: true, default: moment()},
     day                 :  	{ type: String, required: true},
-	location 			:   String,
-	referrer 			:   String,
+	location: {
+	    href            : { type: String},
+        protocol        : { type: String},
+        host            : { type: String},
+        search          : { type: String},
+        pathname        : { type: String},
+        page            : { type: String}
+    },
+	referrer: {
+	    href            : { type: String},
+        protocol        : { type: String},
+        host            : { type: String},
+        search          : { type: String},
+        pathname        : { type: String},
+        page            : { type: String}
+    },
 	width 				:   Number,
 	height 			    :   Number,
 	user_agent 			:   String,

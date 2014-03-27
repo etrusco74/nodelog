@@ -1,9 +1,10 @@
 var fs      = require('fs');
 var path    = require('path');
-var moment = require('moment'); 
+var url     = require('url');
+var moment  = require('moment'); 
 var imgPath = path.join(__dirname, '../public/css/img/');
 var logPath = path.join(__dirname, '../log/');
-var utils = require('../config/utils');
+var utils   = require('../config/utils');
 var LogController = require('../controllers/logController').LogController;
 var IpController = require('../controllers/ipController').IpController;
 
@@ -16,14 +17,35 @@ var setNodelog = function(req, res) {
     res.set('Content-Type', 'application/json');
 
     var jsonObjLog = {};
+    var location = {};
+    var referrer = {};
     var jsonObjIp = {};
 
     console.log('------------------- GET - api setNodelog - public --------------------- ');
     
     jsonObjLog.client_id = req.query.u;
     jsonObjLog.day = moment().format("YYYYMMDD");
-    jsonObjLog.location = req.query.l;
-    jsonObjLog.referrer = req.query.r;
+    
+    //jsonObjLog.location = req.query.l;
+    var locationUrl         = url.parse(req.query.l, true);
+    location.href           = locationUrl.href;
+    location.protocol       = locationUrl.protocol;
+    location.host           = locationUrl.host;
+    location.search         = locationUrl.search;
+    location.pathname       = locationUrl.pathname;
+    location.page           = utils.getPageUrl(locationUrl);
+    jsonObjLog.location     = location;
+    
+    //jsonObjLog.referrer = req.query.r;
+    var referrerUrl         = url.parse(req.query.r, true);
+    referrer.href           = referrerUrl.href;
+    referrer.protocol       = referrerUrl.protocol;
+    referrer.host           = referrerUrl.host;
+    referrer.search         = referrerUrl.search;
+    referrer.pathname       = referrerUrl.pathname;
+    referrer.page           = utils.getPageUrl(referrerUrl);
+    jsonObjLog.referrer     = referrer;
+    
     jsonObjLog.width = req.query.w;
     jsonObjLog.height = req.query.h;
     jsonObjLog.user_agent = req.query.a;

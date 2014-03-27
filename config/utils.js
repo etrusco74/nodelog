@@ -17,4 +17,11 @@ var getClientIp = function (req) {
   return ipAddress;
 };
 
+var getPageUrl = function (url) {
+    return {
+        file: (url.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1]
+    };
+};
+
 exports.getClientIp = getClientIp;
+exports.getPageUrl = getPageUrl;
