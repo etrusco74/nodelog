@@ -2,7 +2,6 @@ var fs      = require('fs');
 var path    = require('path');
 var url     = require('url');
 var queryString = require('querystring');
-var geoip = require('geoip-lite');
 var useragent = require('useragent');
 var moment  = require('moment'); 
 var imgPath = path.join(__dirname, '../public/css/img/');
