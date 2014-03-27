@@ -1,5 +1,12 @@
-function __nodelog__() {
-    
+navigator.geolocation.getCurrentPosition(nodelog, nodelog);
+
+function nodelog(position) {
+    var x = 0;
+    var y = 0;
+    if (position != null) {
+        x = position.coords.latitude;
+        y = position.coords.longitude;
+    }
     var u = nodelog_clientid;
     var l = document.location;
     var r = (typeof(document.referrer) == 'undefined') ? '' : document.referrer;
@@ -25,10 +32,9 @@ function __nodelog__() {
     var img=new Image(1,1);
     args += '?u='+e(u); args += '&l='+e(l); args += '&r='+e(r);
     args += '&w='+e(w); args += '&h='+e(h); args += '&a='+e(a);
-    args += '&hl='+e(hl); 
+    args += '&hl='+e(hl); args += '&x='+e(x); args += '&y='+e(y); 
     //img.src='http://nodelog-c9-etrusco.c9.io/nodelog'+args;
     img.src='http://nodelogapp.herokuapp.com/nodelog'+args;
     img.onload = function() { return; };
-    
 }
-__nodelog__();
+//nodelog();

@@ -32,7 +32,9 @@ var logSchema = mongoose.Schema({
 	operating_system    :   String,
 	device              :   String,
 	history_length 		:   Number,
-	client_ip			:   String
+	client_ip			:   String,
+	lng    		        :   Number,
+    lat			        :   Number
 	
 });
 
