@@ -61,9 +61,6 @@ var setNodelog = function(req, res) {
     jsonObjLog.history_length = req.query.hl;
     jsonObjLog.client_ip = utils.getClientIp(req);
     
-    jsonObjLog.lng = req.query.y;
-    jsonObjLog.lat = req.query.x;
-    
     //console.log(jsonObjLog);
     
     logController.save(jsonObjLog, function(err, logRes){
