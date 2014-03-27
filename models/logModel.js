@@ -28,8 +28,12 @@ var logSchema = mongoose.Schema({
 	width 				:   Number,
 	height 			    :   Number,
 	user_agent 			:   String,
+	agent               :   String,
+	operating_system    :   String,
+	device              :   String,
 	history_length 		:   Number,
-	client_ip			:   String
+	client_ip			:   String,
+	geo_ip              :   mongoose.Schema.Types.Mixed
 	
 });
 

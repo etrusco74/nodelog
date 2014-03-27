@@ -2,6 +2,8 @@ var fs      = require('fs');
 var path    = require('path');
 var url     = require('url');
 var queryString = require('querystring');
+var geoip = require('geoip-lite');
+var useragent = require('useragent');
 var moment  = require('moment'); 
 var imgPath = path.join(__dirname, '../public/css/img/');
 var logPath = path.join(__dirname, '../log/');
@@ -28,22 +30,16 @@ var setNodelog = function(req, res) {
     jsonObjLog.client_id = req.query.u;
     jsonObjLog.day = moment().format("YYYYMMDD");
     
-    //jsonObjLog.location = req.query.l;
     var locationUrl         = url.parse(req.query.l, true);
     location.href           = locationUrl.href;
     location.protocol       = locationUrl.protocol;
     location.host           = locationUrl.host;
     location.search         = locationUrl.search;
     location.queryParams    = queryString.parse(location.search.replace(/^.*\?/, ''));  
-    /*if (location.search.indexOf('?') >= 0) {
-        queryParams = queryString.parse(location.search.replace(/^.*\?/, ''));
-        console.log('>>> location query params : ' + JSON.stringify(queryParams));
-    }*/
     location.pathname       = locationUrl.pathname;
     location.page           = utils.getPageUrl(locationUrl);
     jsonObjLog.location     = location;
     
-    //jsonObjLog.referrer = req.query.r;
     var referrerUrl         = url.parse(req.query.r, true);
     referrer.href           = referrerUrl.href;
     referrer.protocol       = referrerUrl.protocol;
@@ -57,8 +53,17 @@ var setNodelog = function(req, res) {
     jsonObjLog.width = req.query.w;
     jsonObjLog.height = req.query.h;
     jsonObjLog.user_agent = req.query.a;
+    
+    var agent = useragent.parse(req.query.a);
+    jsonObjLog.agent            = agent.toAgent();                
+	jsonObjLog.operating_system = agent.os.toString();        
+	jsonObjLog.device           = agent.device.toString();             
+	
     jsonObjLog.history_length = req.query.hl;
     jsonObjLog.client_ip = utils.getClientIp(req);
+    var geo = geoip.lookup(jsonObjLog.client_ip);
+    jsonObjLog.geo_ip = geo;
+    
     //console.log(jsonObjLog);
     
     logController.save(jsonObjLog, function(err, logRes){
