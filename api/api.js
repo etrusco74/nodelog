@@ -1,6 +1,7 @@
 var fs      = require('fs');
 var path    = require('path');
 var url     = require('url');
+var queryString = require('querystring');
 var moment  = require('moment'); 
 var imgPath = path.join(__dirname, '../public/css/img/');
 var logPath = path.join(__dirname, '../log/');
@@ -20,6 +21,7 @@ var setNodelog = function(req, res) {
     var location = {};
     var referrer = {};
     var jsonObjIp = {};
+    var queryParams = {};
 
     console.log('------------------- GET - api setNodelog - public --------------------- ');
     
@@ -32,6 +34,11 @@ var setNodelog = function(req, res) {
     location.protocol       = locationUrl.protocol;
     location.host           = locationUrl.host;
     location.search         = locationUrl.search;
+    location.queryParams    = queryString.parse(location.search.replace(/^.*\?/, ''));  
+    /*if (location.search.indexOf('?') >= 0) {
+        queryParams = queryString.parse(location.search.replace(/^.*\?/, ''));
+        console.log('>>> location query params : ' + JSON.stringify(queryParams));
+    }*/
     location.pathname       = locationUrl.pathname;
     location.page           = utils.getPageUrl(locationUrl);
     jsonObjLog.location     = location;
@@ -42,6 +49,7 @@ var setNodelog = function(req, res) {
     referrer.protocol       = referrerUrl.protocol;
     referrer.host           = referrerUrl.host;
     referrer.search         = referrerUrl.search;
+    referrer.queryParams    = queryString.parse(referrer.search.replace(/^.*\?/, ''));  
     referrer.pathname       = referrerUrl.pathname;
     referrer.page           = utils.getPageUrl(referrerUrl);
     jsonObjLog.referrer     = referrer;

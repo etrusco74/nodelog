@@ -12,6 +12,7 @@ var logSchema = mongoose.Schema({
         protocol        : { type: String},
         host            : { type: String},
         search          : { type: String},
+        queryParams     : { type: String},
         pathname        : { type: String},
         page            : { type: String}
     },
@@ -20,6 +21,7 @@ var logSchema = mongoose.Schema({
         protocol        : { type: String},
         host            : { type: String},
         search          : { type: String},
+        queryParams     : { type: String},
         pathname        : { type: String},
         page            : { type: String}
     },
