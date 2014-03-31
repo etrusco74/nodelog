@@ -56,7 +56,7 @@
         <!-- content -->
         <div class="container">
             <h3>connection</h3>
-            <p>connected to <span id='con' class="text-danger"></span> - unique access : <span id='num' class="text-danger">0</span></p>
+            <p>connected to <span id='con' class="text-danger"></span> - day : <span id='day' class="text-danger"></span> - page view : <span id='pageView' class="text-danger">0</span> - unique access : <span id='uniqueAccess' class="text-danger">0</span></p>
             <h3>realtime log</h3>
             <ul id='log' class="list-unstyled"></ul>  
         </div>
@@ -99,7 +99,9 @@
             });
             
             socket.on('num', function (msg) {
-                $("#num").hide().text(msg.num).fadeIn(1000);
+                $("#day").text(msg.day);
+                $("#uniqueAccess").hide().text(msg.uniqueAccess).fadeIn(1000);
+                $("#pageView").hide().text(msg.pageView).fadeIn(1000);
             });
     
         });

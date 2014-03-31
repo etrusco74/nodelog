@@ -91,15 +91,15 @@ io.on('connection', function (socket) {
         socket.set('name', name);
         console.log ('>>> SET SOCKET ID ' + socket.id + ' - NAME ' + name) ;
       
-        var jsonObjIp = {};
-        jsonObjIp.day = moment().format("YYYYMMDD");
-        jsonObjIp.client_id = name;
+        var jsonObjStat = {};
+        jsonObjStat.day = moment().format("YYYYMMDD");
+        jsonObjStat.client_id = name;
         
         statController.get(jsonObjStat, function(err, statRes){
             if(statRes!=null) {
                 var text = statRes;
                 io.sockets.socket(socket.id).emit('num', text);
-                console.log ('>>> SENT MESSAGE TO SOCKET ID ' + socket.id + ' - NAME ' + name + ' - client_id ' + ipRes.client_id + ' - text ' +  JSON.stringify(text)) ;
+                console.log ('>>> SENT MESSAGE TO SOCKET ID ' + socket.id + ' - NAME ' + name + ' - client_id ' + statRes.client_id + ' - text ' +  JSON.stringify(text)) ;
             }
         });  
     });
