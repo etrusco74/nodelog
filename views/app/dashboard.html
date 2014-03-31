@@ -101,7 +101,7 @@
             socket.on('num', function (msg) {
                 $("#day").text(msg.day);
                 $("#pageView").hide().text(msg.pageView).fadeIn(1000);
-                var ua = $("#uniqueAccess").val();
+                var ua = $("#uniqueAccess").text();
                 if (ua != msg.uniqueAccess) $("#uniqueAccess").hide().text(msg.uniqueAccess).fadeIn(1000);
             });
     
