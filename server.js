@@ -71,9 +71,9 @@ server.listen(app.get('port'), function () {
 /** socket.io **/
 var sockets = [];
 var LogModel = require('./models/logModel');
-var IpModel = require('./models/ipModel');
-var IpController = require('./controllers/ipController').IpController;
-var ipController = new IpController();
+var StatModel = require('./models/statModel');
+var StatController = require('./controllers/statController').StatController;
+var statController = new StatController();
 
 io.configure(function (){
   io.set('log level', 1);
@@ -95,9 +95,9 @@ io.on('connection', function (socket) {
         jsonObjIp.day = moment().format("YYYYMMDD");
         jsonObjIp.client_id = name;
         
-        ipController.get(jsonObjIp, function(err, ipRes){
-            if(ipRes!=null) {
-                var text = ipRes;
+        statController.get(jsonObjStat, function(err, statRes){
+            if(statRes!=null) {
+                var text = statRes;
                 io.sockets.socket(socket.id).emit('num', text);
                 console.log ('>>> SENT MESSAGE TO SOCKET ID ' + socket.id + ' - NAME ' + name + ' - client_id ' + ipRes.client_id + ' - text ' +  JSON.stringify(text)) ;
             }
@@ -135,11 +135,11 @@ io.on('connection', function (socket) {
          
     });
     
-    IpModel.on('add', function(ipRes) {
+    StatModel.on('add', function(statRes) {
         
-        var text = ipRes;
+        var text = statRes;
         console.log ('-------------------------------------------------'); 
-        console.log ('>>> IPMODEL ADD EVENT FIRED'); 
+        console.log ('>>> STATMODEL ADD EVENT FIRED'); 
         console.log ('>>> NUMSOCKETS ' + sockets.length); 
         console.log ('>>> client_id ' + text.client_id);
         
@@ -161,11 +161,11 @@ io.on('connection', function (socket) {
          
     });
     
-    IpModel.on('change', function(ipRes) {
+    StatModel.on('change', function(statRes) {
         
-        var text = ipRes;
+        var text = statRes;
         console.log ('-------------------------------------------------'); 
-        console.log ('>>> IPMODEL CHANGE EVENT FIRED'); 
+        console.log ('>>> STATMODEL CHANGE EVENT FIRED'); 
         console.log ('>>> NUMSOCKETS ' + sockets.length); 
         console.log ('>>> client_id ' + text.client_id);
         
@@ -186,6 +186,5 @@ io.on('connection', function (socket) {
         });
          
     });
-    
     
 });

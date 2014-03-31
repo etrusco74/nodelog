@@ -8,10 +8,10 @@ var imgPath = path.join(__dirname, '../public/css/img/');
 var logPath = path.join(__dirname, '../log/');
 var utils   = require('../config/utils');
 var LogController = require('../controllers/logController').LogController;
-var IpController = require('../controllers/ipController').IpController;
+var StatController = require('../controllers/statController').StatController;
 
 var logController = new LogController();
-var ipController = new IpController();
+var statController = new StatController();
 
 /** set nodelog **/
 var setNodelog = function(req, res) {
@@ -21,7 +21,7 @@ var setNodelog = function(req, res) {
     var jsonObjLog = {};
     var location = {};
     var referrer = {};
-    var jsonObjIp = {};
+    var jsonObjStat = {};
     var queryParams = {};
 
     console.log('------------------- GET - api setNodelog - public --------------------- ');
@@ -71,19 +71,25 @@ var setNodelog = function(req, res) {
         
         logController.existIpAddressInDay(logRes, function(err, logRes2){
             
+                jsonObjStat.day = jsonObjLog.day;
+                jsonObjStat.client_id = jsonObjLog.client_id;
+                    
                 if (logRes2.length == 1) {
                     console.log('INCREMENT - first access for IP ' + jsonObjLog.client_ip + ' in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
-                    
-                    jsonObjIp.day = jsonObjLog.day;
-                    jsonObjIp.client_id = jsonObjLog.client_id;
-                    
-                    ipController.save(jsonObjIp, function(err, ipRes){
+                    jsonObjStat.first_access = true;
+                    statController.save(jsonObjStat, function(err, statRes){
                         if (err) console.log(err);
-                        console.log(ipRes);
+                        console.log(statRes);
                     });    
                 }
-                else    
+                else    {
                     console.log('NOT INCREMENT - ip ' + jsonObjLog.client_ip + ' already exist in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
+                    jsonObjStat.first_access = false;
+                    statController.save(jsonObjStat, function(err, statRes){
+                        if (err) console.log(err);
+                        console.log(statRes);
+                    });  
+                }
             
             });  
         });     
