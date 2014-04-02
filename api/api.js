@@ -4,6 +4,8 @@ var url     = require('url');
 var queryString = require('querystring');
 var useragent = require('useragent');
 var moment  = require('moment'); 
+var rest = require('restler');
+
 var imgPath = path.join(__dirname, '../public/css/img/');
 var logPath = path.join(__dirname, '../log/');
 var utils   = require('../config/utils');
@@ -61,42 +63,49 @@ var setNodelog = function(req, res) {
     jsonObjLog.history_length = req.query.hl;
     jsonObjLog.client_ip = utils.getClientIp(req);
     
-    //console.log(jsonObjLog);
-    
-    logController.save(jsonObjLog, function(err, logRes){
-        if (err) console.log(err);
+    var rest_url = 'http://freegeoip.net/json/' + jsonObjLog.client_ip;
+    rest.get(rest_url).on('complete', function(data) {
+        console.log('GEO IP ' + JSON.stringify(data)); // auto convert to object
+        jsonObjLog.geo_ip = data;
         
-        /** check for unique IP address **/
-        var day = moment().format("YYYYMMDD");
+        //console.log(jsonObjLog);
         
-        logController.existIpAddressInDay(logRes, function(err, logRes2){
+        logController.save(jsonObjLog, function(err, logRes){
+            if (err) console.log(err);
             
-                jsonObjStat.day = jsonObjLog.day;
-                jsonObjStat.client_id = jsonObjLog.client_id;
-                    
-                if (logRes2.length == 1) {
-                    console.log('INCREMENT - first access for IP ' + jsonObjLog.client_ip + ' in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
-                    jsonObjStat.first_access = true;
-                    statController.save(jsonObjStat, function(err, statRes){
-                        if (err) console.log(err);
-                        console.log(statRes);
-                    });    
-                }
-                else    {
-                    console.log('NOT INCREMENT - ip ' + jsonObjLog.client_ip + ' already exist in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
-                    jsonObjStat.first_access = false;
-                    statController.save(jsonObjStat, function(err, statRes){
-                        if (err) console.log(err);
-                        console.log(statRes);
-                    });  
-                }
+            /** check for unique IP address **/
+            var day = moment().format("YYYYMMDD");
             
-            });  
-        });     
+            logController.existIpAddressInDay(logRes, function(err, logRes2){
+                
+                    jsonObjStat.day = jsonObjLog.day;
+                    jsonObjStat.client_id = jsonObjLog.client_id;
+                        
+                    if (logRes2.length == 1) {
+                        console.log('INCREMENT - first access for IP ' + jsonObjLog.client_ip + ' in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
+                        jsonObjStat.first_access = true;
+                        statController.save(jsonObjStat, function(err, statRes){
+                            if (err) console.log(err);
+                            console.log(statRes);
+                        });    
+                    }
+                    else    {
+                        console.log('NOT INCREMENT - ip ' + jsonObjLog.client_ip + ' already exist in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
+                        jsonObjStat.first_access = false;
+                        statController.save(jsonObjStat, function(err, statRes){
+                            if (err) console.log(err);
+                            console.log(statRes);
+                        });  
+                    }
+                
+                });  
+            });     
+        
+        
+        res.set('Content-Type', 'image/gif');
+        res.sendfile(imgPath + '1.gif');
     
-    
-    res.set('Content-Type', 'image/gif');
-    res.sendfile(imgPath + '1.gif');
+    });
 };
 
 /** get getUniqueIpAddress **/

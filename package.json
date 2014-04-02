@@ -16,6 +16,7 @@
     "socket.io": "0.9.16",
     "async": "0.2.10",
     "underscore": "1.6.0",
-    "useragent": "~2.0.8"
+    "useragent": "~2.0.8",
+    "restler": "~3.2.0"
   }
 }
