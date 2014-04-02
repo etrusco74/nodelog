@@ -27,5 +27,31 @@ LogController.prototype.existIpAddressInDay = function(json, callback) {
     
 };
 
+/** best page in day **/
+LogController.prototype.bestPageInDay = function(json, callback) {
+    
+    LogModel.aggregate({ 
+        $match: { $and: [{client_id:json.client_id}, {day:json.day}]}
+    },    
+    { 
+        $group: { _id: '$location.page', total_view: { $sum: 1 } }
+    },
+    {
+        $sort: {total_view:-1}
+    },
+    function (err, res) {
+        if (err)      callback(err.message, null)
+        else  {        
+            var maxValues = [];
+            for (var i = 0; i < 10; i++) {
+                var object = res[i];
+                maxValues.push(object);
+            }
+            callback(null, maxValues);
+        }    
+    });
+    
+};
+
 /** exports **/
 exports.LogController = LogController;

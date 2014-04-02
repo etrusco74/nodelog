@@ -57,6 +57,7 @@
         <div class="container">
             <h3>connection</h3>
             <p>connected to <span id='con' class="text-danger"></span> - day : <span id='day' class="text-danger"></span> - page view : <span id='pageView' class="text-danger">0</span> - unique access : <span id='uniqueAccess' class="text-danger">0</span></p>
+            <ul id='bestPages' class="list-unstyled"></ul>
             <h3>realtime log</h3>
             <ul id='log' class="list-unstyled"></ul>  
         </div>
@@ -101,6 +102,13 @@
             socket.on('num', function (msg) {
                 $("#day").text(msg.day);
                 $("#pageView").hide().text(msg.pageView).fadeIn(1000);
+                var best = '';
+                msg.bestPages.forEach(function(json) {
+                    best += JSON.stringify(json);
+                });
+                $('#bestPages li:last').remove();
+                $("#bestPages").append('<li><small><span class="glyphicon glyphicon-hand-right"></span> ' + best + '</small></li>');
+                
                 var ua = $("#uniqueAccess").text();
                 if (ua != msg.uniqueAccess) $("#uniqueAccess").hide().text(msg.uniqueAccess).fadeIn(1000);
             });

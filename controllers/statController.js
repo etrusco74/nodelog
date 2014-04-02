@@ -12,6 +12,7 @@ StatController.prototype.save = function(json, callback) {
           if(stat != null){
             (json.first_access) ? stat.uniqueAccess = stat.uniqueAccess + 1 : stat.uniqueAccess;
             stat.pageView = stat.pageView + 1;
+            stat.bestPages = json.bestPages;
             stat.save(function(err, statRes){
                 if (err)     callback(err.message, null)
                 else 		{

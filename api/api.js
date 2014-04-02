@@ -76,31 +76,35 @@ var setNodelog = function(req, res) {
             /** check for unique IP address **/
             var day = moment().format("YYYYMMDD");
             
-            logController.existIpAddressInDay(logRes, function(err, logRes2){
-                
-                    jsonObjStat.day = jsonObjLog.day;
-                    jsonObjStat.client_id = jsonObjLog.client_id;
-                        
-                    if (logRes2.length == 1) {
-                        console.log('INCREMENT - first access for IP ' + jsonObjLog.client_ip + ' in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
-                        jsonObjStat.first_access = true;
-                        statController.save(jsonObjStat, function(err, statRes){
-                            if (err) console.log(err);
-                            console.log(statRes);
-                        });    
-                    }
-                    else    {
-                        console.log('NOT INCREMENT - ip ' + jsonObjLog.client_ip + ' already exist in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
-                        jsonObjStat.first_access = false;
-                        statController.save(jsonObjStat, function(err, statRes){
-                            if (err) console.log(err);
-                            console.log(statRes);
-                        });  
-                    }
-                
-                });  
-            });     
-        
+            logController.bestPageInDay(logRes, function(err, bestPages){
+                console.log('>>> best page : ' + JSON.stringify(bestPages));
+            
+                logController.existIpAddressInDay(logRes, function(err, logRes2){
+                    
+                        jsonObjStat.day = jsonObjLog.day;
+                        jsonObjStat.client_id = jsonObjLog.client_id;
+                        jsonObjStat.bestPages = bestPages;
+                            
+                        if (logRes2.length == 1) {
+                            console.log('INCREMENT - first access for IP ' + jsonObjLog.client_ip + ' in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
+                            jsonObjStat.first_access = true;
+                            statController.save(jsonObjStat, function(err, statRes){
+                                if (err) console.log(err);
+                                console.log(statRes);
+                            });    
+                        }
+                        else    {
+                            console.log('NOT INCREMENT - ip ' + jsonObjLog.client_ip + ' already exist in day ' + jsonObjLog.day + ' for client_id ' + jsonObjLog.client_id);
+                            jsonObjStat.first_access = false;
+                            statController.save(jsonObjStat, function(err, statRes){
+                                if (err) console.log(err);
+                                console.log(statRes);
+                            });  
+                        }
+                    
+                    });  
+                });     
+        });
         
         res.set('Content-Type', 'image/gif');
         res.sendfile(imgPath + '1.gif');
