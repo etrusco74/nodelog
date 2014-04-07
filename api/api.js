@@ -63,6 +63,14 @@ var setNodelog = function(req, res) {
     jsonObjLog.history_length = req.query.hl;
     jsonObjLog.client_ip = utils.getClientIp(req);
     
+    /** async callback **/
+    /*
+    logController.deleteOldLog(jsonObjLog, function(err, logRes){
+        if (err) console.log(err);
+        console.log('>>> delete : ' + JSON.stringify(logRes));
+    });
+    */
+    
     var rest_url = 'http://freegeoip.net/json/' + jsonObjLog.client_ip;
     rest.get(rest_url).on('complete', function(data) {
         console.log('GEO IP ' + JSON.stringify(data)); // auto convert to object

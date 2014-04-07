@@ -17,6 +17,8 @@
     "async": "0.2.10",
     "underscore": "1.6.0",
     "useragent": "~2.0.8",
-    "restler": "~3.2.0"
+    "restler": "~3.2.0",
+    "mongodb": "~1.4.0",
+    "node-schedule": "~0.1.13"
   }
 }

@@ -1,6 +1,7 @@
 var http = require('http');
 var path = require('path');
 var moment = require('moment'); 
+var schedule = require('node-schedule');
 
 var async = require('async');
 var socketio = require('socket.io');
@@ -10,7 +11,13 @@ var app = express();
 var server = http.createServer(app);
 var io = socketio.listen(server);
 
-var _ = require('underscore');
+var job = schedule.scheduleJob('0 3 * * *', function(){
+    /** delete old log and compact database (native mongoDB api) **/
+    console.log('>>> start job ' + moment().format("YYYYMMDD HH.mm.ss"));
+    var database = require('./batch/database');
+    database.cleanDB();
+});
+
 var mongoose = require('mongoose');
 var config = require('./config/config');
 mongoose.connect('mongodb://' + config.mongo.user + ':' + config.mongo.password + '@' + config.mongo.host + ':' + config.mongo.port + '/' + config.mongo.db);
