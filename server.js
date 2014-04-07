@@ -11,10 +11,10 @@ var app = express();
 var server = http.createServer(app);
 var io = socketio.listen(server);
 
+var database = require('./batch/database');
 var job = schedule.scheduleJob('0 3 * * *', function(){
     /** delete old log and compact database (native mongoDB api) **/
     console.log('>>> start job ' + moment().format("YYYYMMDD HH.mm.ss"));
-    var database = require('./batch/database');
     database.cleanDB();
 });
 
