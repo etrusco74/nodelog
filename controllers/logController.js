@@ -30,11 +30,12 @@ LogController.prototype.existIpAddressInDay = function(json, callback) {
 /** best page in day **/
 LogController.prototype.bestPageInDay = function(json, callback) {
     
-    LogModel.aggregate({ 
+    LogModel.aggregate(
+    { 
         $match: { $and: [{client_id:json.client_id}, {day:json.day}]}
     },    
     { 
-        $group: { _id: '$location.page', total_view: { $sum: 1 } }
+        $group: { _id: '$location.href', total_view: { $sum: 1 } }
     },
     {
         $sort: {total_view:-1}
