@@ -12,7 +12,7 @@ var cleanDB = function() {
         else    {
             //var day = moment().subtract('days', 1).toISOString()
             //db.collection('logs').remove( {day: {$lte: day}} , function(err, result) {
-            var day = moment().format("YYYYMMDD");
+            var day = moment().utc().format("YYYYMMDD");
             db.collection('logs').remove( {day: {$ne: day}} , function(err, result) {
                 console.log('>>> delete result ' + JSON.stringify(result));
                 db.command({repairDatabase:1}, function(err, result) {

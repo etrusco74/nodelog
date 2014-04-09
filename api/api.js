@@ -29,7 +29,8 @@ var setNodelog = function(req, res) {
     console.log('------------------- GET - api setNodelog - public --------------------- ');
     
     jsonObjLog.client_id = req.query.u;
-    jsonObjLog.day = moment().format("YYYYMMDD");
+    jsonObjLog.log_date = moment().utc();
+    jsonObjLog.day = moment().utc().format("YYYYMMDD");
     
     var locationUrl         = url.parse(req.query.l, true);
     location.href           = locationUrl.href;
@@ -82,8 +83,6 @@ var setNodelog = function(req, res) {
             if (err) console.log(err);
             
             /** check for unique IP address **/
-            var day = moment().format("YYYYMMDD");
-            
             logController.bestPageInDay(logRes, function(err, bestPages){
                 console.log('>>> best page : ' + JSON.stringify(bestPages));
             

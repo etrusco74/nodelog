@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var logSchema = mongoose.Schema({
     
     client_id 			:  	{ type: String, required: true},
-    log_date            :  	{ type: Date, required: true, default: Date.now},
+    log_date            :  	{ type: Date, required: true},
     day                 :  	{ type: String, required: true},
 	location: {
 	    href            :   String,
