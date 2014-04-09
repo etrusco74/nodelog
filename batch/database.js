@@ -10,6 +10,8 @@ var cleanDB = function() {
         console.log('>>> COMPACT DATA BASE');
         if(err) console.dir(err);
         else    {
+            //var day = moment().subtract('days', 1).toISOString()
+            //db.collection('logs').remove( {day: {$lte: day}} , function(err, result) {
             var day = moment().format("YYYYMMDD");
             db.collection('logs').remove( {day: {$ne: day}} , function(err, result) {
                 console.log('>>> delete result ' + JSON.stringify(result));

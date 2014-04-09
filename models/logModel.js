@@ -1,11 +1,10 @@
 var mongoose = require('mongoose');
-var moment = require('moment'); 
 
 /** Log Model **/
 var logSchema = mongoose.Schema({
     
     client_id 			:  	{ type: String, required: true},
-    log_date            :  	{ type: Date, required: true, default: moment()},
+    log_date            :  	{ type: Date, required: true, default: Date.now},
     day                 :  	{ type: String, required: true},
 	location: {
 	    href            :   String,
