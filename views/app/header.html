@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="nodelog" />
+    <meta name="description" content="nodelog, track your website access" />
+    <meta name="author" content="Alessandro De Marchi - ademarchi74@gmail.com" />
+    
+    <!-- css library -->
+    <link href="../css/ext/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/app/style.css" rel="stylesheet">
+    
+    <!-- javascript library -->
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="../js/ext/bootstrap.min.js"></script>
+    
+    <title>nodelog - realtime web analytics</title>
+
+</head>
+
+<body>
+    
+    <div id="wrap">
+        
+        <!-- navbar -->
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">nodelog</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-header">View Realtime Log</li>
+                                <li><a href="http://nodelog-c9-etrusco.c9.io/dashboard/pensandoit">pensando.it - c9</a></li>
+                                <li><a href="http://nodelog-c9-etrusco.c9.io/dashboard/analogicait">analogica.it - c9</a></li>
+                                <li><a href="http://nodelogapp.herokuapp.com/dashboard/pensandoit">pensando.it - heroku</a></li>
+                                <li><a href="http://nodelogapp.herokuapp.com/dashboard/analogicait">analogica.it - heroku</a></li>
+                                <li class="divider"></li>
+                                <li class="dropdown-header">View History Data</li>
+                                <li><a href="http://nodelog-c9-etrusco.c9.io/stat/pensandoit">stat pensando.it - c9</a></li>
+                                <li><a href="http://nodelog-c9-etrusco.c9.io/stat/analogicait">stat analogica.it - c9</a></li>
+                                <li><a href="http://nodelogapp.herokuapp.com/stat/pensandoit">stat pensando.it - heroku</a></li>
+                                <li><a href="http://nodelogapp.herokuapp.com/stat/analogicait">stat analogica.it - heroku</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>

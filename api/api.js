@@ -64,21 +64,11 @@ var setNodelog = function(req, res) {
     jsonObjLog.history_length = req.query.hl;
     jsonObjLog.client_ip = utils.getClientIp(req);
     
-    /** async callback **/
-    /*
-    logController.deleteOldLog(jsonObjLog, function(err, logRes){
-        if (err) console.log(err);
-        console.log('>>> delete : ' + JSON.stringify(logRes));
-    });
-    */
-    
     var rest_url = 'http://freegeoip.net/json/' + jsonObjLog.client_ip;
     rest.get(rest_url).on('complete', function(data) {
         console.log('GEO IP ' + JSON.stringify(data)); // auto convert to object
         jsonObjLog.geo_ip = data;
-        
-        //console.log(jsonObjLog);
-        
+
         logController.save(jsonObjLog, function(err, logRes){
             if (err) console.log(err);
             
@@ -119,37 +109,6 @@ var setNodelog = function(req, res) {
     });
 };
 
-/** get getUniqueIpAddress **/
-var getUniqueIpAddress = function(req, res) {
-   
-    res.set('Content-Type', 'application/json');
-
-    var jsonObj = { };
-    
-    console.log('------------------- GET - api getUniqueIpAddress - public --------------------- ');
-    
-    logController.getUniqueIpAddress(function(err, logs){
-        if (err) {
-            jsonObj.success = false;
-            jsonObj.error = err;
-            res.send(jsonObj);
-            console.log(jsonObj.error);
-        } else {
-            if (logs.length != 0) {
-                res.send(JSON.stringify(logs));
-                console.log('Logs: ' + JSON.stringify(logs));
-            }
-            else {
-                jsonObj.success = false;
-                jsonObj.error = 'No logs found';
-                res.send(jsonObj);
-                console.log(jsonObj.error);
-            }
-        }
-    })    
-};
-
 
 /** exports **/
 exports.setNodelog = setNodelog;
-exports.getUniqueIpAddress = getUniqueIpAddress;

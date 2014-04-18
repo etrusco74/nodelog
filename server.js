@@ -67,12 +67,11 @@ app.all('*', function(req, res, next){
 });
 
 /** app route view **/ 
-app.get('/clientid/:client_id', appRoute.dashboard);
+app.get('/dashboard/:client_id', appRoute.dashboard);
+app.get('/stat/:client_id', appRoute.stat);
 
 /** api route view **/ 
 app.get('/nodelog', api.setNodelog);
-app.get('/ip', api.getUniqueIpAddress);
-
 
 /** get 404 error **/
 app.all('*', function(req, res){
@@ -92,7 +91,6 @@ var statController = new StatController();
 
 io.configure(function (){
   io.set('log level', 1);
-  //io.set('transports', ['websocket', 'flashsocket', 'htmlfile', 'jsonp-polling']);
   io.set("transports", ["xhr-polling"]); 
   io.set("polling duration", 10); 
 });
@@ -128,7 +126,7 @@ io.on('connection', function (socket) {
         
         var text = logRes;
         console.log ('-------------------------------------------------'); 
-        console.log ('>>> LOGMODEL EVENT FIRED'); 
+        console.log ('>>> LOGMODEL ADD EVENT FIRED'); 
         console.log ('>>> NUMSOCKETS ' + sockets.length); 
         console.log ('>>> client_id ' + text.client_id);
         

@@ -37,7 +37,7 @@ StatController.prototype.save = function(json, callback) {
     
 };
 
-/** Get unique access count **/
+/** Get stat data for client_id and day **/
 StatController.prototype.get = function(json, callback) {
     
     StatModel.findOne({ $and: [{client_id:json.client_id}, {day:json.day}] }, function (err, stat) {
