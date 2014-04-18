@@ -4,8 +4,9 @@ var mongoose = require('mongoose');
 var statSchema = mongoose.Schema({
     
     client_id 			:  	{ type: String, required: true},
+    stat_date           :  	{ type: Date, required: true},
     day                 :  	{ type: String, required: true},
-	uniqueAccess       	:   Number,
+    uniqueAccess       	:   Number,
 	pageView 			:   Number,
 	bestPages           :   mongoose.Schema.Types.Mixed
 	

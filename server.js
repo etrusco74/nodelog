@@ -72,6 +72,8 @@ app.get('/stat/:client_id', appRoute.stat);
 
 /** api route view **/ 
 app.get('/nodelog', api.setNodelog);
+app.get('/api/stats/daily/ua/:day/:client_id', api.getDailyUniqueAccess);
+app.get('/api/stats/daily/pw/:day/:client_id', api.getDailyPageView);
 
 /** get 404 error **/
 app.all('*', function(req, res){

@@ -15,7 +15,7 @@ var StatController = require('../controllers/statController').StatController;
 var logController = new LogController();
 var statController = new StatController();
 
-/** set nodelog **/
+/** set nodelog  - public **/
 var setNodelog = function(req, res) {
     
     res.set('Content-Type', 'application/json');
@@ -78,8 +78,9 @@ var setNodelog = function(req, res) {
             
                 logController.existIpAddressInDay(logRes, function(err, logRes2){
                     
-                        jsonObjStat.day = jsonObjLog.day;
                         jsonObjStat.client_id = jsonObjLog.client_id;
+                        jsonObjStat.stat_date = moment().utc().format('YYYY-MM-DD[T00:00:00.000]');
+                        jsonObjStat.day = jsonObjLog.day;
                         jsonObjStat.bestPages = bestPages;
                             
                         if (logRes2.length == 1) {
@@ -109,6 +110,68 @@ var setNodelog = function(req, res) {
     });
 };
 
+/** get daily unique access - public **/
+var getDailyUniqueAccess = function(req, res) {
+    
+    res.set('Content-Type', 'application/json');
+    
+    var jsonObj = { };
+    
+    console.log('------------------- GET - api getDailyUniqueAccess - public --------------------- ');
+    
+    statController.getDailyUniqueAccess(req.params, function(err, stat){
+        if (err) {
+            jsonObj.success = false;
+            jsonObj.error = err;
+            res.send(jsonObj);
+            console.log(jsonObj.error);
+        } else {
+            if (stat.length != 0) {
+                res.send(JSON.stringify(stat));
+                console.log('Daily unique access: ' + JSON.stringify(stat));
+            }
+            else {
+                jsonObj.success = false;
+                jsonObj.error = 'No stat found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+        }
+    })   
+}
+
+/** get daily page view - public **/
+var getDailyPageView = function(req, res) {
+    
+    res.set('Content-Type', 'application/json');
+    
+    var jsonObj = { };
+    
+    console.log('------------------- GET - api getDailyPageView - public --------------------- ');
+    
+    statController.getDailyPageView(req.params, function(err, stat){
+        if (err) {
+            jsonObj.success = false;
+            jsonObj.error = err;
+            res.send(jsonObj);
+            console.log(jsonObj.error);
+        } else {
+            if (stat.length != 0) {
+                res.send(JSON.stringify(stat));
+                console.log('Daily page view: ' + JSON.stringify(stat));
+            }
+            else {
+                jsonObj.success = false;
+                jsonObj.error = 'No stat found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+        }
+    })   
+}
+
 
 /** exports **/
 exports.setNodelog = setNodelog;
+exports.getDailyUniqueAccess = getDailyUniqueAccess;
+exports.getDailyPageView = getDailyPageView;
