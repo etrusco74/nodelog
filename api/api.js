@@ -9,12 +9,507 @@ var rest = require('restler');
 var imgPath = path.join(__dirname, '../public/css/img/');
 var logPath = path.join(__dirname, '../log/');
 var utils   = require('../config/utils');
+
+var UserController = require('../controllers/userController').UserController;
+var SiteController = require('../controllers/siteController').SiteController;
 var LogController = require('../controllers/logController').LogController;
 var StatController = require('../controllers/statController').StatController;
+var MailController = require('../controllers/mailController').MailController;
 
+var userController = new UserController();
+var siteController = new SiteController();
 var logController = new LogController();
 var statController = new StatController();
+var mailController = new MailController();
 
+/*************************************** USER API ***************************************/
+
+/********** GET method **********/
+
+/** findUserById - private **/
+var findUserById = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+
+    console.log('------------------- GET - api findUserById - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    authObj.lang = req.headers.lang;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'findUserById';
+    authObj.verb = 'GET';
+    authObj.params = req.params;
+   
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                //jsonObj.error = 'AuthKey not found';
+                jsonObj.error = err;
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+
+                userController.findById(authObj.params.id, function(err, user){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        if (user) {
+                            res.send(JSON.stringify(user));
+                            console.log('Users: ' + JSON.stringify(user));
+                        }
+                        else {
+                            jsonObj.success = false;
+                            jsonObj.error = 'No user found';
+                            res.send(jsonObj);
+                            console.log(jsonObj.error);
+                        }
+                    }
+                })
+            }
+        })
+    }
+};
+
+/** findUserByUsername - private **/
+var findUserByUsername = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+
+    console.log('------------------- GET - api findUserByUsername - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    authObj.lang = req.headers.lang;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'findUserByUsername';
+    authObj.verb = 'GET';
+    authObj.params = req.params;
+   
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+
+                userController.findByUsername(authObj.params.username, function(err, user){
+                    if (err) {
+                        authObj.isAuth = true;
+                        console.log('authObj: ' + JSON.stringify(authObj));
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        if (user) {
+                            res.send(JSON.stringify(user));
+                            console.log('Users: ' + JSON.stringify(user));
+                        }
+                        else {
+                            jsonObj.success = false;
+                            jsonObj.error = 'No user found';
+                            res.send(jsonObj);
+                            console.log(jsonObj.error);
+                        }
+                    }
+                })
+            }
+        })
+    }
+};
+
+/********** POST method **********/
+
+/** login - public **/
+var login = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+        
+    var jsonObj = { };
+    var authObj = { };
+    var userReq = req.body;
+    
+    console.log(JSON.stringify(req.body));
+    
+    console.log('------------------- POST - api login - public  --------------------- ');
+    
+    authObj.lang = req.headers.lang;
+    
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'login';
+    authObj.verb = 'POST';
+    console.log('request body: ' + JSON.stringify(userReq));
+    console.log('authObj: ' + JSON.stringify(authObj));
+    
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        return;
+    }
+    if (typeof userReq.username === 'undefined')       {
+        jsonObj.success = false;
+        jsonObj.error = 'username required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        return;
+    }
+    if (typeof userReq.password === 'undefined')       {
+        jsonObj.success = false;
+        jsonObj.error = 'password required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        return;
+    }
+    userController.login(userReq, authObj.ipAddress, function(err, userRes){
+        if (err) {
+            jsonObj.success = false;
+            jsonObj.error = err;
+            res.send(jsonObj);
+            console.log(jsonObj.error);
+        } else {
+            if (userRes != null) {
+                jsonObj.success = true;
+                jsonObj.user    = userRes;
+                res.send(jsonObj);
+                console.log('Login ok');
+                console.log('User: ' + JSON.stringify(userRes));
+            }
+            else {
+                jsonObj.success = false;
+                jsonObj.error = "Login Failed";
+                res.send(jsonObj);
+                console.log('Login Failed');
+            }
+        }
+    })
+};
+
+/** saveUser - public **/
+var saveUser = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+    var userReq = req.body;
+
+    console.log('------------------- POST - api saveUser -public --------------------- ');
+
+    authObj.lang = req.headers.lang;
+    
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'saveUser';
+    authObj.verb = 'POST';
+    console.log('request body: ' + JSON.stringify(userReq));
+    console.log('authObj: ' + JSON.stringify(authObj));
+
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        return;
+    }
+    userController.save(userReq, authObj.ipAddress, function(err, userRes){
+        if (err) {
+            jsonObj.success = false;
+            jsonObj.error = err;
+            res.send(jsonObj);
+            console.log(jsonObj.error);
+        } else {
+            jsonObj.success = true;
+            jsonObj.user    = userRes;
+            res.send(jsonObj);
+            console.log('Registration ok');
+            console.log('User: ' + JSON.stringify(userRes));
+                         
+            /** send activate mail **/            
+            mailController.activate(userRes, authObj.lang, function(err, res){
+                console.log('err ' + err);
+                console.log('res ' + res);
+            });
+        }
+    })
+};
+
+/********** PUT method **********/
+
+/** updateUserById - private **/
+var updateUserById = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+    var userReq = req.body;
+
+    console.log('------------------- PUT - api updateUserById - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    authObj.lang = req.headers.lang;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'updateUserById';
+    authObj.verb = 'PUT';
+    authObj.params = req.params;
+    console.log('request body: ' + JSON.stringify(userReq));
+    
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+        return;
+    }
+
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+
+                userController.updateById(authObj.params.id, userReq, function(err, userRes){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        if (userRes) {
+                            jsonObj.success = true;
+                            jsonObj.user = userRes;
+                            res.send(jsonObj);
+                            console.log('User updated');
+                            console.log('User: ' + JSON.stringify(userRes));
+                        }
+                        else {
+                            jsonObj.success = false;
+                            jsonObj.error = 'No user found';
+                            res.send(jsonObj);
+                            console.log(jsonObj.error);
+                        }
+                    }
+                })
+            }
+        })
+    }
+};
+
+/** activateUserById - public **/
+var activateUserById = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+
+    console.log('------------------- PUT - api activateUserById - public --------------------- ');
+
+    authObj.lang = req.headers.lang;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'activateUserById';
+    authObj.verb = 'PUT';
+    authObj.params = req.params;
+    
+    userController.activate(authObj, function(err, userRes){
+        if (err) {
+            jsonObj.success = false;
+            jsonObj.error = err;
+            res.send(jsonObj);
+            console.log(jsonObj.error);
+        } else {
+            jsonObj.success = true;
+            jsonObj.desc = 'User activated';
+            res.send(jsonObj);
+            console.log('User activated');
+            
+            /** send welcome mail **/  
+            mailController.welcome(userRes, authObj.lang, function(err, res){
+                console.log(err);
+                console.log(res);
+            });
+        }
+    })  
+    
+};
+
+/** resetUserPassword - public **/
+var resetUserPassword = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+
+    console.log('------------------- PUT - api resetUserPassword - public --------------------- ');
+
+    authObj.lang = req.headers.lang;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'resetUserPassword';
+    authObj.verb = 'PUT';
+    authObj.params = req.params;
+    
+    userController.resetPassword(authObj, function(err, userRes, pwd){
+        if (err) {
+            jsonObj.success = false;
+            jsonObj.error = err;
+            res.send(jsonObj);
+            console.log(jsonObj.error);
+        } else {
+            jsonObj.success = true;
+            jsonObj.desc = 'Password reset';
+            res.send(jsonObj);
+            console.log('Password reset');
+            
+            /** send resend password mail **/ 
+            mailController.resend(userRes, authObj.lang, pwd, function(err, res){
+                console.log(err);
+                console.log(res);
+            });
+        }
+    })
+   
+    
+};
+
+/********** DELETE method **********/
+
+/** deleteUserById - private **/
+var deleteUserById = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+
+    console.log('------------------- DELETE - api deleteUserById - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    authObj.lang = req.headers.lang;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'deleteUserById';
+    authObj.verb = 'DELETE';
+    authObj.params = req.params;
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+
+                userController.deleteById(authObj.params.id, function(err){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        jsonObj.success = true;
+                        jsonObj.desc = 'User deleted';
+                        res.send(jsonObj);
+                        console.log('User deleted');
+                    }
+                })
+            }
+        })
+    }
+};
+
+
+/*************************************** SITE API ***************************************/
+
+
+/*************************************** LOG API ****************************************/
 /** set nodelog  - public **/
 var setNodelog = function(req, res) {
     
@@ -110,6 +605,7 @@ var setNodelog = function(req, res) {
     });
 };
 
+/*************************************** STAT API ***************************************/
 /** get daily unique access - public **/
 var getDailyUniqueAccess = function(req, res) {
     
@@ -170,8 +666,18 @@ var getDailyPageView = function(req, res) {
     })   
 }
 
+/****************************************************************************************/
 
 /** exports **/
+exports.findUserById = findUserById; 
+exports.findUserByUsername = findUserByUsername;
+exports.login = login;
+exports.saveUser = saveUser;
+exports.updateUserById = updateUserById;
+exports.activateUserById = activateUserById;
+exports.resetUserPassword = resetUserPassword;
+exports.deleteUserById = deleteUserById;
+
 exports.setNodelog = setNodelog;
 exports.getDailyUniqueAccess = getDailyUniqueAccess;
 exports.getDailyPageView = getDailyPageView;

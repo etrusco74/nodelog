@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 /** Log Model **/
 var logSchema = mongoose.Schema({
     
-    client_id 			:  	{ type: String, required: true},
+    client_id 			:  	{ type: String, required: true, ref:'User'},
     log_date            :  	{ type: Date, required: true},
     day                 :  	{ type: String, required: true},
 	location: {

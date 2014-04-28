@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 /** IP Model **/
 var statSchema = mongoose.Schema({
     
-    client_id 			:  	{ type: String, required: true},
+    client_id 			:  	{ type: String, required: true, ref:'User'},
     stat_date           :  	{ type: Date, required: true},
     day                 :  	{ type: String, required: true},
     uniqueAccess       	:   Number,

@@ -21,6 +21,9 @@
     "mongodb": "~1.4.0",
     "node-schedule": "~0.1.13",
     "cron": "~1.0.4",
-    "time": "~0.10.0"
+    "time": "~0.10.0",
+    "bcrypt": "~0.7.8",
+    "postmark": "~0.2.0",
+    "email-templates": "~0.1.8"
   }
 }

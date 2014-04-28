@@ -70,10 +70,28 @@ app.all('*', function(req, res, next){
 app.get('/dashboard/:client_id', appRoute.dashboard);
 app.get('/stat/:client_id', appRoute.stat);
 
-/** api route view **/ 
+/** api route - RESTful webservice **/
+
+/** user api **/
+app.get('/api/user/id/:id', api.findUserById);
+app.get('/api/user/username/:username', api.findUserByUsername);
+
+app.post('/api/login', api.login);
+app.post('/api/user', api.saveUser);
+
+app.put('/api/user/id/:id', api.updateUserById);
+app.put('/api/user/activate/id/:id/key/:key', api.activateUserById);
+app.put('/api/user/resetpwd/email/:email', api.resetUserPassword);
+
+app.delete('/api/user/id/:id', api.deleteUserById);
+
+/** log api **/
 app.get('/nodelog', api.setNodelog);
+
+/** stat api **/
 app.get('/api/stats/daily/ua/:day/:client_id', api.getDailyUniqueAccess);
 app.get('/api/stats/daily/pw/:day/:client_id', api.getDailyPageView);
+
 
 /** get 404 error **/
 app.all('*', function(req, res){
