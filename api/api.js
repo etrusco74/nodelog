@@ -272,8 +272,8 @@ var saveUser = function(req, res) {
                          
             /** send activate mail **/            
             mailController.activate(userRes, authObj.lang, function(err, res){
-                console.log('err ' + err);
-                console.log('res ' + res);
+                console.log('err ' + JSON.stringify(err));
+                console.log('res ' + JSON.stringify(res));
             });
         }
     })

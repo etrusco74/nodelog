@@ -35,7 +35,7 @@ MailController.prototype.welcome = function(json, lang, callback) {
                 
                     /** set mail **/
                     var mail = {
-                        From: 'Nodelog Team <ademarchi74@gmail.com>',
+                        From: 'Nodelog Team <ademarchi74@pensando.it>',
                         To: json.email,
                         Subject: subj,
                         HtmlBody: html,
@@ -74,16 +74,16 @@ MailController.prototype.activate = function(json, lang, callback) {
                     var subj = '';
                     switch (lang){
                         case "en":
-                            subj = 'Thank you for your registration to nodelog';
+                            subj = "Thank you for your registration to nodelog";
                         break;
                         case "it":
-                            subj = 'Grazie per esserti registrato su nodelog';
+                            subj = "Grazie per esserti registrato su nodelog";
                         break;
                     }
-                
+                    
                     /** set mail **/
                     var mail = {
-                        From: 'Nodelog Team <ademarchi74@gmail.com>',
+                        From: 'Nodelog Team <ademarchi74@pensando.it>',
                         To: json.email,
                         Subject: subj,
                         HtmlBody: html,
@@ -131,7 +131,7 @@ MailController.prototype.resend = function(json, lang, pwd, callback) {
                 
                     /** set mail **/
                     var mail = {
-                        From: 'Nodelog Team <ademarchi74@gmail.com>',
+                        From: 'Nodelog Team <ademarchi74@pensando.it>',
                         To: json.email,
                         Subject: subj,
                         HtmlBody: html,
