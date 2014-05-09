@@ -85,6 +85,9 @@ app.put('/api/user/resetpwd/email/:email', api.resetUserPassword);
 
 app.delete('/api/user/id/:id', api.deleteUserById);
 
+/** site api **/
+app.post('/api/site', api.saveSite);
+
 /** log api **/
 app.get('/nodelog', api.setNodelog);
 

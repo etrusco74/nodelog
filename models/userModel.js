@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 /** User Model **/
 var userSchema = mongoose.Schema({
+    
     first_name              :   String,
     last_name               :   String,
     username                :   { type: String, required: true, unique: true },
@@ -14,7 +15,8 @@ var userSchema = mongoose.Schema({
                                     login_date      : Date,
                                     activate_date   : Date
                                 },
-    verified                :   { type: Boolean, default: false }          
+    verified                :   { type: Boolean, default: false }  
+    
 });
 
 var UserModel = mongoose.model('User', userSchema);

@@ -137,14 +137,6 @@ UserController.prototype.updateById = function(id, json, callback) {
     });
 };
 
-/** Delete All users **/
-UserController.prototype.deleteAll = function(callback) {
-    UserModel.remove(function (err) {
-        if (err) callback(err.message)
-        else callback(null);
-    });
-};
-
 /** Delete user by id **/
 UserController.prototype.deleteById = function(id, callback) {
     UserModel.findById(id, {password:0}, function (err, user) {

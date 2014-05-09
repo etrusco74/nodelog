@@ -508,6 +508,81 @@ var deleteUserById = function(req, res) {
 
 /*************************************** SITE API ***************************************/
 
+/********** POST method **********/
+
+/** saveSite - private **/
+var saveSite = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+    var siteReq = req.body;
+
+    console.log('------------------- POST - api saveSite - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'saveSite';
+    authObj.verb = 'POST';    
+    console.log('request body: ' + JSON.stringify(siteReq));    
+
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+        return;
+    }
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                siteReq.username = authObj.username;
+                siteController.save(siteReq, function(err, siteRes){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        jsonObj.success = true;
+                        jsonObj.report    = siteRes;
+                        res.send(jsonObj);
+                        console.log('Site Saved');
+                        console.log('Site: ' + JSON.stringify(siteRes));
+                    }
+                })
+            
+            }
+        })
+    }            
+};
+
 
 /*************************************** LOG API ****************************************/
 /** set nodelog  - public **/
@@ -606,64 +681,138 @@ var setNodelog = function(req, res) {
 };
 
 /*************************************** STAT API ***************************************/
-/** get daily unique access - public **/
+/** get daily unique access - private **/
 var getDailyUniqueAccess = function(req, res) {
     
     res.set('Content-Type', 'application/json');
     
     var jsonObj = { };
+    var authObj = { };
     
-    console.log('------------------- GET - api getDailyUniqueAccess - public --------------------- ');
+    console.log('------------------- GET - api getDailyUniqueAccess - private --------------------- ');
     
-    statController.getDailyUniqueAccess(req.params, function(err, stat){
-        if (err) {
-            jsonObj.success = false;
-            jsonObj.error = err;
-            res.send(jsonObj);
-            console.log(jsonObj.error);
-        } else {
-            if (stat.length != 0) {
-                res.send(JSON.stringify(stat));
-                console.log('Daily unique access: ' + JSON.stringify(stat));
-            }
-            else {
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'getDailyUniqueAccess';
+    authObj.verb = 'GET';
+    authObj.params = req.params;
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
                 jsonObj.success = false;
-                jsonObj.error = 'No stat found';
+                jsonObj.error = err;
                 res.send(jsonObj);
                 console.log(jsonObj.error);
             }
-        }
-    })   
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+    
+                //FIXME aggiunge controllo siteController.checkUsername
+                
+                statController.getDailyUniqueAccess(authObj.params, function(err, stat){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        if (stat.length != 0) {
+                            res.send(JSON.stringify(stat));
+                            console.log('Daily unique access: ' + JSON.stringify(stat));
+                        }
+                        else {
+                            jsonObj.success = false;
+                            jsonObj.error = 'No stat found';
+                            res.send(jsonObj);
+                            console.log(jsonObj.error);
+                        }
+                    }
+                })   
+            }
+        })
+    }    
 }
 
-/** get daily page view - public **/
+/** get daily page view - private **/
 var getDailyPageView = function(req, res) {
     
     res.set('Content-Type', 'application/json');
     
     var jsonObj = { };
+    var authObj = { };
     
-    console.log('------------------- GET - api getDailyPageView - public --------------------- ');
+    console.log('------------------- GET - api getDailyPageView - private --------------------- ');
     
-    statController.getDailyPageView(req.params, function(err, stat){
-        if (err) {
-            jsonObj.success = false;
-            jsonObj.error = err;
-            res.send(jsonObj);
-            console.log(jsonObj.error);
-        } else {
-            if (stat.length != 0) {
-                res.send(JSON.stringify(stat));
-                console.log('Daily page view: ' + JSON.stringify(stat));
-            }
-            else {
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'getDailyPageView';
+    authObj.verb = 'GET';
+    authObj.params = req.params;
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
                 jsonObj.success = false;
-                jsonObj.error = 'No stat found';
+                jsonObj.error = err;
                 res.send(jsonObj);
                 console.log(jsonObj.error);
             }
-        }
-    })   
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                //FIXME aggiunge controllo siteController.checkUsername
+    
+                statController.getDailyPageView(req.params, function(err, stat){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        if (stat.length != 0) {
+                            res.send(JSON.stringify(stat));
+                            console.log('Daily page view: ' + JSON.stringify(stat));
+                        }
+                        else {
+                            jsonObj.success = false;
+                            jsonObj.error = 'No stat found';
+                            res.send(jsonObj);
+                            console.log(jsonObj.error);
+                        }
+                    }
+                }) 
+            }
+        })
+    }    
 }
 
 /****************************************************************************************/
@@ -677,6 +826,8 @@ exports.updateUserById = updateUserById;
 exports.activateUserById = activateUserById;
 exports.resetUserPassword = resetUserPassword;
 exports.deleteUserById = deleteUserById;
+
+exports.saveSite = saveSite;
 
 exports.setNodelog = setNodelog;
 exports.getDailyUniqueAccess = getDailyUniqueAccess;
