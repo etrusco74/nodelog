@@ -719,30 +719,41 @@ var getDailyUniqueAccess = function(req, res) {
                 console.log(jsonObj.error);
             }
             else    {
-                authObj.isAuth = true;
-                console.log('authObj: ' + JSON.stringify(authObj));
-    
-                //FIXME aggiunge controllo siteController.checkUsername
-                
-                statController.getDailyUniqueAccess(authObj.params, function(err, stat){
+                siteController.checkUsername(authObj, function(err, site){
                     if (err) {
+                        authObj.isAuth = false;
+                        console.log('authObj: ' + JSON.stringify(authObj));
+                        
                         jsonObj.success = false;
                         jsonObj.error = err;
                         res.send(jsonObj);
                         console.log(jsonObj.error);
-                    } else {
-                        if (stat.length != 0) {
-                            res.send(JSON.stringify(stat));
-                            console.log('Daily unique access: ' + JSON.stringify(stat));
-                        }
-                        else {
-                            jsonObj.success = false;
-                            jsonObj.error = 'No stat found';
-                            res.send(jsonObj);
-                            console.log(jsonObj.error);
-                        }
                     }
-                })   
+                    else    {
+                        authObj.isAuth = true;
+                        console.log('authObj: ' + JSON.stringify(authObj));
+            
+                        statController.getDailyUniqueAccess(authObj.params, function(err, stat){
+                            if (err) {
+                                jsonObj.success = false;
+                                jsonObj.error = err;
+                                res.send(jsonObj);
+                                console.log(jsonObj.error);
+                            } else {
+                                if (stat.length != 0) {
+                                    res.send(JSON.stringify(stat));
+                                    console.log('Daily unique access: ' + JSON.stringify(stat));
+                                }
+                                else {
+                                    jsonObj.success = false;
+                                    jsonObj.error = 'No stat found';
+                                    res.send(jsonObj);
+                                    console.log(jsonObj.error);
+                                }
+                            }
+                        }) 
+                    }
+                })                                    
             }
         })
     }    
@@ -786,30 +797,41 @@ var getDailyPageView = function(req, res) {
                 console.log(jsonObj.error);
             }
             else    {
-                authObj.isAuth = true;
-                console.log('authObj: ' + JSON.stringify(authObj));
-                
-                //FIXME aggiunge controllo siteController.checkUsername
-    
-                statController.getDailyPageView(req.params, function(err, stat){
+                siteController.checkUsername(authObj, function(err, site){
                     if (err) {
+                        authObj.isAuth = false;
+                        console.log('authObj: ' + JSON.stringify(authObj));
+                        
                         jsonObj.success = false;
                         jsonObj.error = err;
                         res.send(jsonObj);
                         console.log(jsonObj.error);
-                    } else {
-                        if (stat.length != 0) {
-                            res.send(JSON.stringify(stat));
-                            console.log('Daily page view: ' + JSON.stringify(stat));
-                        }
-                        else {
-                            jsonObj.success = false;
-                            jsonObj.error = 'No stat found';
-                            res.send(jsonObj);
-                            console.log(jsonObj.error);
-                        }
                     }
-                }) 
+                    else    {       
+                        authObj.isAuth = true;
+                        console.log('authObj: ' + JSON.stringify(authObj));
+                        
+                        statController.getDailyPageView(req.params, function(err, stat){
+                            if (err) {
+                                jsonObj.success = false;
+                                jsonObj.error = err;
+                                res.send(jsonObj);
+                                console.log(jsonObj.error);
+                            } else {
+                                if (stat.length != 0) {
+                                    res.send(JSON.stringify(stat));
+                                    console.log('Daily page view: ' + JSON.stringify(stat));
+                                }
+                                else {
+                                    jsonObj.success = false;
+                                    jsonObj.error = 'No stat found';
+                                    res.send(jsonObj);
+                                    console.log(jsonObj.error);
+                                }
+                            }
+                        })
+                    }
+                })     
             }
         })
     }    

@@ -38,7 +38,7 @@ SiteController.prototype.save = function(json, callback) {
 
 /** Check username by client_id **/
 SiteController.prototype.checkUsername = function(json, callback) {
-    SiteModel.findOne( {$and: [ {'client_id': json.client_id}, {'username':json.username} ] } , function (err, site) {
+    SiteModel.findOne( {$and: [ {'client_id': json.params.client_id}, {'username':json.username} ] } , function (err, site) {
         if (err)    callback(err.message, null)
          else {
             if (site != null)   {
