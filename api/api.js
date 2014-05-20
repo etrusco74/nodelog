@@ -508,6 +508,160 @@ var deleteUserById = function(req, res) {
 
 /*************************************** SITE API ***************************************/
 
+/********** GET method **********/
+
+/** findSiteById - private **/
+var findSiteById = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+    
+    console.log('------------------- GET - api findSiteById - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'findSiteById';
+    authObj.verb = 'GET';    
+    authObj.params = req.params;
+    
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+        return;
+    }
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                siteController.findById(authObj.params.id, function(err, site){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        if (site) {
+                            res.send(JSON.stringify(site));
+                            console.log('Site: ' + JSON.stringify(site));
+                        }
+                        else {
+                            jsonObj.success = false;
+                            jsonObj.error = 'No site found';
+                            res.send(jsonObj);
+                            console.log(jsonObj.error);
+                        }
+                    }
+                })
+            
+            }
+        })
+    }            
+};
+
+/** findSitesByUsername - private **/
+var findSitesByUsername = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+    
+    console.log('------------------- GET - api findSitesByUsername - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'findSitesByUsername';
+    authObj.verb = 'GET';    
+    authObj.params = req.params;
+    
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+        return;
+    }
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                siteController.findByUsername(authObj.params.username, function(err, sites){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        if (sites) {
+                            res.send(JSON.stringify(sites));
+                            console.log('Sites: ' + JSON.stringify(sites));
+                        }
+                        else {
+                            jsonObj.success = false;
+                            jsonObj.error = 'No sites found';
+                            res.send(jsonObj);
+                            console.log(jsonObj.error);
+                        }
+                    }
+                })
+            
+            }
+        })
+    }            
+};
+
 /********** POST method **********/
 
 /** saveSite - private **/
@@ -583,6 +737,153 @@ var saveSite = function(req, res) {
     }            
 };
 
+/********** PUT method **********/
+
+/** updateSiteById - private **/
+var updateSiteById = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+    var siteReq = req.body;
+
+    console.log('------------------- PUT - api updateSiteById - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'updateSiteById';
+    authObj.verb = 'PUT';    
+    authObj.params = req.params;
+    console.log('request body: ' + JSON.stringify(siteReq));    
+
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+        return;
+    }
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                siteReq.username = authObj.username;
+                siteController.updateById(authObj.params.id, siteReq, function(err, siteRes){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        jsonObj.success = true;
+                        jsonObj.report    = siteRes;
+                        res.send(jsonObj);
+                        console.log('Site Saved');
+                        console.log('Site: ' + JSON.stringify(siteRes));
+                    }
+                })
+            
+            }
+        })
+    }            
+};
+
+/********** DELETE method **********/
+
+/** deleteSiteById - private **/
+var deleteSiteById = function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+    var authObj = { };
+    
+    console.log('------------------- DELETE - api deleteSiteById - private --------------------- ');
+
+    authObj.authKey = req.headers.authkey;
+    authObj.username = req.headers.username;
+    
+    authObj.isAuth = false;
+    authObj.ipAddress = utils.getClientIp(req);
+    authObj.api = 'deleteSiteById';
+    authObj.verb = 'DELETE';    
+    authObj.params = req.params;
+    
+    var content_type = req.get('content-type');    
+    if (content_type.indexOf("application/json") === -1)   {
+        jsonObj.success = false;
+        jsonObj.error = 'Content Type must be application/json';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+        return;
+    }
+    
+    if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
+        jsonObj.success = false;
+        jsonObj.error = 'auth token required';
+        res.send(jsonObj);
+        console.log(jsonObj.error);
+        console.log('authObj: ' + JSON.stringify(authObj));
+    }
+    else    {
+        userController.checkAuthKey(authObj, function(err, user){
+            if (err) {
+                authObj.isAuth = false;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                jsonObj.success = false;
+                jsonObj.error = 'AuthKey not found';
+                res.send(jsonObj);
+                console.log(jsonObj.error);
+            }
+            else    {
+                authObj.isAuth = true;
+                console.log('authObj: ' + JSON.stringify(authObj));
+                
+                siteController.deleteById(authObj.params.id, function(err, siteRes){
+                    if (err) {
+                        jsonObj.success = false;
+                        jsonObj.error = err;
+                        res.send(jsonObj);
+                        console.log(jsonObj.error);
+                    } else {
+                        jsonObj.success = true;
+                        jsonObj.desc = 'Site deleted';
+                        res.send(jsonObj);
+                        console.log('Site deleted');
+                    }
+                })
+            
+            }
+        })
+    }            
+};
 
 /*************************************** LOG API ****************************************/
 /** set nodelog  - public **/
@@ -849,7 +1150,11 @@ exports.activateUserById = activateUserById;
 exports.resetUserPassword = resetUserPassword;
 exports.deleteUserById = deleteUserById;
 
+exports.findSiteById = findSiteById;
+exports.findSitesByUsername = findSitesByUsername;
 exports.saveSite = saveSite;
+exports.updateSiteById = updateSiteById;
+exports.deleteSiteById = deleteSiteById;
 
 exports.setNodelog = setNodelog;
 exports.getDailyUniqueAccess = getDailyUniqueAccess;

@@ -213,7 +213,5 @@ UserController.prototype.resetPassword = function(json, callback) {
     });
 };
 
-
-
 /** exports **/
 exports.UserController = UserController;
