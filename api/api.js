@@ -529,6 +529,7 @@ var findSiteById = function(req, res) {
     authObj.verb = 'GET';    
     authObj.params = req.params;
     
+    /*
     var content_type = req.get('content-type');    
     if (content_type.indexOf("application/json") === -1)   {
         jsonObj.success = false;
@@ -538,6 +539,7 @@ var findSiteById = function(req, res) {
         console.log('authObj: ' + JSON.stringify(authObj));
         return;
     }
+    */
     
     if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
         jsonObj.success = false;
@@ -605,6 +607,7 @@ var findSitesByUsername = function(req, res) {
     authObj.verb = 'GET';    
     authObj.params = req.params;
     
+    /*
     var content_type = req.get('content-type');    
     if (content_type.indexOf("application/json") === -1)   {
         jsonObj.success = false;
@@ -614,6 +617,7 @@ var findSitesByUsername = function(req, res) {
         console.log('authObj: ' + JSON.stringify(authObj));
         return;
     }
+    */
     
     if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
         jsonObj.success = false;
@@ -683,7 +687,8 @@ var saveSite = function(req, res) {
     authObj.api = 'saveSite';
     authObj.verb = 'POST';    
     console.log('request body: ' + JSON.stringify(siteReq));    
-
+    
+    /*
     var content_type = req.get('content-type');    
     if (content_type.indexOf("application/json") === -1)   {
         jsonObj.success = false;
@@ -693,6 +698,7 @@ var saveSite = function(req, res) {
         console.log('authObj: ' + JSON.stringify(authObj));
         return;
     }
+    */
     
     if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
         jsonObj.success = false;
@@ -725,7 +731,7 @@ var saveSite = function(req, res) {
                         console.log(jsonObj.error);
                     } else {
                         jsonObj.success = true;
-                        jsonObj.report    = siteRes;
+                        jsonObj.site    = siteRes;
                         res.send(jsonObj);
                         console.log('Site Saved');
                         console.log('Site: ' + JSON.stringify(siteRes));
@@ -759,7 +765,8 @@ var updateSiteById = function(req, res) {
     authObj.verb = 'PUT';    
     authObj.params = req.params;
     console.log('request body: ' + JSON.stringify(siteReq));    
-
+    
+    /*
     var content_type = req.get('content-type');    
     if (content_type.indexOf("application/json") === -1)   {
         jsonObj.success = false;
@@ -769,6 +776,7 @@ var updateSiteById = function(req, res) {
         console.log('authObj: ' + JSON.stringify(authObj));
         return;
     }
+    */
     
     if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
         jsonObj.success = false;
@@ -801,7 +809,7 @@ var updateSiteById = function(req, res) {
                         console.log(jsonObj.error);
                     } else {
                         jsonObj.success = true;
-                        jsonObj.report    = siteRes;
+                        jsonObj.site    = siteRes;
                         res.send(jsonObj);
                         console.log('Site Saved');
                         console.log('Site: ' + JSON.stringify(siteRes));
@@ -834,6 +842,7 @@ var deleteSiteById = function(req, res) {
     authObj.verb = 'DELETE';    
     authObj.params = req.params;
     
+    /*
     var content_type = req.get('content-type');    
     if (content_type.indexOf("application/json") === -1)   {
         jsonObj.success = false;
@@ -843,6 +852,7 @@ var deleteSiteById = function(req, res) {
         console.log('authObj: ' + JSON.stringify(authObj));
         return;
     }
+    */
     
     if ((typeof req.headers.authkey === 'undefined') || (typeof req.headers.username === 'undefined'))  {
         jsonObj.success = false;
