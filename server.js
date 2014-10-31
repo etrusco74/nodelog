@@ -71,6 +71,7 @@ app.get('/dashboard/:client_id', appRoute.dashboard);
 app.get('/stat/:client_id', appRoute.stat);
 
 /** api route - RESTful webservice **/
+app.get('/api/test', api.test);
 
 /** user api **/
 app.get('/api/user/id/:id', api.findUserById);
@@ -126,7 +127,7 @@ io.on('connection', function (socket) {
 
     sockets.push(socket);
     
-    socket.on('identify', function (name) {
+    socket.on('create', function (name) {
         
         socket.set('name', name);
         console.log ('>>> SET SOCKET ID ' + socket.id + ' - NAME ' + name) ;
