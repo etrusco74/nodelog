@@ -22,6 +22,26 @@ var logController = new LogController();
 var statController = new StatController();
 var mailController = new MailController();
 
+/*************************************** TEST API ***************************************/
+/********** GET method **********/
+
+/** test - public **/
+var test= function(req, res) {
+
+    res.set('Content-Type', 'application/json');
+
+    var jsonObj = { };
+
+    console.log('------------------- GET - api test - public --------------------- ');
+
+    jsonObj.success = true;
+    jsonObj.desc = 'api ok';
+    res.send(jsonObj);
+    console.log(jsonObj.desc);
+
+};
+
+
 /*************************************** USER API ***************************************/
 
 /********** GET method **********/
@@ -1151,7 +1171,9 @@ var getDailyPageView = function(req, res) {
 /****************************************************************************************/
 
 /** exports **/
-exports.findUserById = findUserById; 
+exports.test = test;
+
+exports.findUserById = findUserById;
 exports.findUserByUsername = findUserByUsername;
 exports.login = login;
 exports.saveUser = saveUser;
