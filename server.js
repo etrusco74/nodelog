@@ -71,7 +71,7 @@ app.get('/dashboard/:client_id', appRoute.dashboard);
 app.get('/stat/:client_id', appRoute.stat);
 
 /** api route - RESTful webservice **/
-app.get('/api/test', api.test);
+//app.get('/api/test', api.test);
 
 /** user api **/
 app.get('/api/user/id/:id', api.findUserById);
