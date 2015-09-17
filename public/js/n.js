@@ -26,9 +26,9 @@ function __nodelog__() {
     args += '?u='+e(u); args += '&l='+e(l); args += '&r='+e(r);
     args += '&w='+e(w); args += '&h='+e(h); args += '&a='+e(a);
     args += '&hl='+e(hl); 
-    //img.src='http://nodelog-c9-etrusco.c9.io/nodelog'+args;
+    img.src='http://nodelog-c9-etrusco.c9.io/nodelog'+args;
     //img.src='http://nodelogapp.herokuapp.com/nodelog'+args;
-    img.src='http://localhost:8080/nodelog'+args;
+    //img.src='http://localhost:8080/nodelog'+args;
     img.onload = function() { return; };
     
 }
